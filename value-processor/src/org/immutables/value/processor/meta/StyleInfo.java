@@ -16,8 +16,8 @@
 package org.immutables.value.processor.meta;
 
 import com.google.common.collect.ImmutableSet;
-import org.immutables.value.Value;
 import java.lang.annotation.Annotation;
+import org.immutables.value.Value;
 
 /**
  * We copy styles to StyleInfo to safely cache styles between rounds etc and prevent any memory
@@ -115,6 +115,14 @@ public abstract class StyleInfo implements ValueMirrors.Style {
   @Value.Parameter
   @Override
   public abstract String create();
+
+  @Value.Parameter
+  @Override
+  public abstract boolean chainMutators();
+
+  @Value.Parameter
+  @Override
+  public abstract boolean collectionSetterAcceptsIterable();
 
   @Value.Parameter
   @Override

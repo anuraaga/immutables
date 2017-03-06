@@ -15,9 +15,21 @@
  */
 package org.immutables.fixture.modifiable;
 
-import org.junit.Test;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.immutables.check.Checkers.check;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import org.junit.Test;
 
 public class ModifiablesTest {
 
@@ -177,5 +189,34 @@ public class ModifiablesTest {
     m.lst().add("a");
     m.lst().add("b");
     check(m.lst()).isOf("a", "b");
+  }
+
+  @Test
+  public void modifiableAsJavaBean() throws Exception {
+    // It's a java bean
+    BeanInfo beanInfo = Introspector.getBeanInfo(ModifiableJavaBean.class);
+    Map<String, PropertyDescriptor> properties =
+            Arrays.stream(beanInfo.getPropertyDescriptors())
+                  .collect(Collectors.toMap(PropertyDescriptor::getName, Function.identity()));
+    ImmutableList.of("primary", "id", "description", "names", "options").forEach(propertyName -> {
+      assertNotNull(properties.get(propertyName).getReadMethod());
+      assertNotNull(properties.get(propertyName).getWriteMethod());
+    });
+
+    ModifiableJavaBean bean = ModifiableJavaBean.create();
+    bean.setPrimary(true);
+    bean.setDescription("description");
+    bean.setId(1000);
+    bean.setNames(ImmutableList.of("name"));
+    bean.addNames("name2");
+    bean.putOptions("foo", "bar");
+
+    // This bean can become immutable.
+    JavaBean immutableBean = bean.toImmutable();
+    assertTrue(immutableBean.isPrimary());
+    check(immutableBean.getDescription()).is("description");
+    check(immutableBean.getId()).is(1000);
+    check(immutableBean.getNames()).isOf("name", "name2");
+    check(immutableBean.getOptions()).is(ImmutableMap.of("foo", "bar"));
   }
 }

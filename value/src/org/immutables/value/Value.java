@@ -582,6 +582,20 @@ public @interface Value {
     String create() default "create";
 
     /**
+     * Whether setters should be chainable by returning {@code this}. Used for mutable implementations.
+     * If {@code false}, setters will void, allowing them to be recognized for JavaBeans.
+     */
+    boolean chainMutators() default true;
+
+    /**
+     * Whether setters for {@link java.util.Collection} types should accept {@link Iterable}. This allows
+     * more flexibility but can affect libraries that use reflection - in particular, these properties
+     * will not be recognized for JavaBeans. If {@code false}, the exact type of the property will be
+     * used in the setter.
+     */
+    boolean collectionSetterAcceptsIterable() default true;
+
+    /**
      * Method to convert to instance of modifiable type to "canonical" immutable instance.
      * @return naming template
      */

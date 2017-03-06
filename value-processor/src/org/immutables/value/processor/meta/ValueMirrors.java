@@ -126,6 +126,10 @@ public final class ValueMirrors {
 
     String create() default "create";
 
+    boolean chainMutators() default true;
+
+    boolean collectionSetterAcceptsIterable() default true;
+
     String toImmutable() default "toImmutable";
 
     String typeBuilder() default "Builder";

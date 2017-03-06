@@ -15,7 +15,8 @@
  */
 package org.immutables.value.processor.meta;
 
-import org.immutables.value.processor.encode.Type;
+import static com.google.common.base.Verify.verify;
+
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -56,8 +57,8 @@ import org.immutables.value.processor.encode.EncodingInfo;
 import org.immutables.value.processor.encode.EncodingMirror;
 import org.immutables.value.processor.encode.Inflater;
 import org.immutables.value.processor.encode.Instantiator;
+import org.immutables.value.processor.encode.Type;
 import org.immutables.value.processor.meta.Styles.UsingName.TypeNames;
-import static com.google.common.base.Verify.verify;
 
 @Value.Enclosing
 public class Proto {
@@ -1720,6 +1721,8 @@ public class Proto {
           input.unset(),
           input.clear(),
           input.create(),
+          input.chainMutators(),
+          input.collectionSetterAcceptsIterable(),
           input.toImmutable(),
           input.typeBuilder(),
           input.typeInnerBuilder(),
